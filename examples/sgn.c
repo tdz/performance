@@ -6,7 +6,7 @@
 int
 main(int argc, char *argv[])
 {
-  static const size_t siz = 16 * 1024 *1024;
+  static const size_t siz = 256 * 1024 * 1024;
 
   char *data = readrand(siz);
 
