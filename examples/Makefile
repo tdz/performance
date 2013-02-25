@@ -14,7 +14,9 @@ PROGRAMS := align \
             lut_nonconst \
             lut_switch \
             sgn_bl \
-            sgn_naive
+            sgn_naive \
+            sort_b \
+            sort_q
 
 align: align.o
 
@@ -53,6 +55,14 @@ sgn_bl: readrand.o \
 sgn_naive: readrand.o \
            sgn.o \
            sgn_naive.o
+
+sort_b: readrand.o \
+        sort.o \
+        sort_b.o
+
+sort_q: readrand.o \
+        sort.o \
+        sort_q.o
 
 # Tools
 
