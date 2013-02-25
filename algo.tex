@@ -16,13 +16,14 @@
   \item \( algorithm(n) = O(steps(n)) \) as \(n \rightarrow \infty \)
   \item Typical results
    \begin{description}
-    \item[\(O(1)\)] constant complexity, sign function, absolute values
-    \item[\(O(logn)\)] logarithmic complexity, binary searches
+    \item[\(O(1)\)] constant complexity, sign function, absolute values, searching in good hash tables
+    \item[\(O(logn)\)] logarithmic complexity, binary searches, balanced search trees
     \item[\(O(n)\)] linear complexity, linear searching
     \item[\(O(nlogn)\)] linearithmic complexity, building search trees \\ \hfill \\
     \item[\(O(n^k)\)] polynomial complexity, naive sorting (e.g, bubble sort), matrix multiplication \\ \hfill \\
     \item[\(O(k^n)\)] exponential complexity, traveling salesman problem
    \end{description}
+   \item example \filename{sort.c}
  \end{itemize}
 \end{frame}
 
@@ -62,12 +63,9 @@
  \frametitle{Which algorithms are best?}
  \begin{itemize}
   \item naive answer: use algorithm with lowest complexity
-  \begin{itemize}
-   \item if \(n\) is sufficiently large
-   \item if you're going to re-use the result (e.g., build a search tree for multiple searches)
-  \end{itemize}
   \item but there are exceptions
   \begin{itemize}
+   \item \(n\) is small
    \item better algorithms come with setup costs (e.g., binary searches need sorted input)
    \item hardware has branch prediction and is optimized for linear memory access (by prefetching memory)
    \begin{itemize}
@@ -75,5 +73,6 @@
     \item linear searches will walk over elements
    \end{itemize}
   \end{itemize}
+  \item \book{B. Kernighan, R. Pike}{The Practice of Programming}{Addison-Wesley 1999}
  \end{itemize}
 \end{frame}
