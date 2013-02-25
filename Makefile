@@ -4,6 +4,7 @@
 PDF_FILES = presentation.pdf
 
 presentation.pdf : algo.tex \
+                   complexity-gpi.pdf \
                    highlevel.tex \
                    lowlevel.tex \
                    presentation.tex \
@@ -11,6 +12,9 @@ presentation.pdf : algo.tex \
 
 # Tools
 
+EPSTOPDF := epstopdf
+EPSTOPDFFLAGS :=
+GNUPLOT := gnuplot
 PDFLATEX := pdflatex
 PDFLATEXFLAGS := -halt-on-error
 
@@ -19,7 +23,7 @@ RM := rm -f
 # Rules
 
 .PHONY: all clean
-.SUFFIXES: .pdf .tex
+.SUFFIXES: .gpi .pdf .tex
 
 all: $(PDF_FILES)
 
@@ -31,6 +35,9 @@ clean:
 	$(RM) *.out
 	$(RM) *.snm
 	$(RM) *.toc
+
+%-gpi.pdf: %.gpi
+	$(GNUPLOT) $^ | $(EPSTOPDF) $(EPSTOPDFFLAGS) --filter --outfile=$@
 
 %.pdf:
 	$(PDFLATEX) $(PDFLATEXFLAGS) -output-format pdf $(basename $@)

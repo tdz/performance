@@ -1,0 +1,29 @@
+
+set terminal postscript eps enhanced color
+set size 1, 1
+
+ld(x) = log(x) / log(2)
+
+set xrange[0:10]
+set xlabel "n"
+
+set yrange[0:100]
+set ylabel "steps(n)"
+
+Const(x)=1
+Logarithmic(x)=ld(x)
+Linear(x)=x
+Linearithmic(x)=x * ld(x)
+Polynomial(x)=x**2
+Exponential(x)=2**x
+
+set multiplot
+
+set key left invert
+
+plot Const(x) title "O(1)\n" lw 4, \
+     Logarithmic(x) title "O(logn)" lw 4, \
+     Linear(x) title "O(n)" lw 4, \
+     Linearithmic(x) title "O(nlogn)" lw 4, \
+     Polynomial(x) title "O(n^k)" lw 4, \
+     Exponential(x) title "O(k^n)" lw 4 lc rgb "brown"
