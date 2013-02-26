@@ -6,6 +6,7 @@ PDF_FILES = presentation.pdf
 presentation.pdf : algo.tex \
                    complexity-gpi.pdf \
                    highlevel.tex \
+                   layout-eps.pdf \
                    lowlevel.tex \
                    presentation.tex \
                    workshop.tex
@@ -35,6 +36,9 @@ clean:
 	$(RM) *.out
 	$(RM) *.snm
 	$(RM) *.toc
+
+%-eps.pdf: %.eps
+	$(EPSTOPDF) $(EPSTOPDFFLAGS) --outfile=$@ $^
 
 %-gpi.pdf: %.gpi
 	$(GNUPLOT) $^ | $(EPSTOPDF) $(EPSTOPDFFLAGS) --filter --outfile=$@
