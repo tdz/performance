@@ -8,6 +8,7 @@ presentation.pdf : algo.tex \
                    highlevel.tex \
                    layout-eps.pdf \
                    lowlevel.tex \
+                   maccess-eps.pdf \
                    pipeline-eps.pdf \
                    presentation.tex \
                    workshop.tex
