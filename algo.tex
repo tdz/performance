@@ -8,22 +8,24 @@
    \end{itemize}
   \item How many steps are necessary to complete algorithm as \( n \rightarrow \infty \)?
  \end{itemize}
+ \begin{itemize}
+  \item Big-O notation
+  \item \( algorithm(n) = O(steps(n)) \) as \(n \rightarrow \infty \)
+ \end{itemize}
 \end{frame}
 
 \begin{frame}
- \frametitle{Big-O Notation}
+ \frametitle{Typical Complexity Classes}
+ \begin{description}
+  \item[\(O(1)\)] constant complexity, sign function, absolute values, searching in well-tuned hash tables
+  \item[\(O(logn)\)] logarithmic complexity, binary searches, balanced search trees
+  \item[\(O(n)\)] linear complexity, linear searching
+  \item[\(O(nlogn)\)] linearithmic complexity, building search trees \\ \hfill \\
+  \item[\(O(n^k)\)] polynomial complexity, naive sorting (e.g, bubble sort), matrix multiplication \\ \hfill \\
+  \item[\(O(k^n)\)] exponential complexity, traveling salesman problem
+ \end{description}
  \begin{itemize}
-  \item \( algorithm(n) = O(steps(n)) \) as \(n \rightarrow \infty \)
-  \item Typical results
-   \begin{description}
-    \item[\(O(1)\)] constant complexity, sign function, absolute values, searching in good hash tables
-    \item[\(O(logn)\)] logarithmic complexity, binary searches, balanced search trees
-    \item[\(O(n)\)] linear complexity, linear searching
-    \item[\(O(nlogn)\)] linearithmic complexity, building search trees \\ \hfill \\
-    \item[\(O(n^k)\)] polynomial complexity, naive sorting (e.g, bubble sort), matrix multiplication \\ \hfill \\
-    \item[\(O(k^n)\)] exponential complexity, traveling salesman problem
-   \end{description}
-   \item example \filename{sort.c}
+  \item example \filename{sort.c}
  \end{itemize}
 \end{frame}
 
@@ -43,7 +45,7 @@
   \item use standard algorithms with known complexity
  \end{itemize}
 
- or
+ \centering{or}
 
  \begin{itemize}
   \item try to describe relation between \( n \) and number of primitive operations
@@ -70,7 +72,7 @@
 \end{frame}
 
 \begin{frame}
- \frametitle{Which algorithms are best?}
+ \frametitle{Which Algorithm Is Best?}
  \begin{itemize}
   \item naive answer: use algorithm with lowest complexity
   \item but there are exceptions
@@ -83,6 +85,9 @@
     \item linear searches will walk over elements
    \end{itemize}
   \end{itemize}
+  \item also consider other resources
+ \end{itemize}
+ \begin{itemize}
   \item \book{B. Kernighan, R. Pike}{The Practice of Programming}{Addison-Wesley 1999}
  \end{itemize}
 \end{frame}
