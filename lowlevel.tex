@@ -35,7 +35,7 @@
   \item static data will be stored in binary
   \item maximize page sharing among running programs
   \begin{itemize}
-   \item init static data with zero to store them in BSS segment
+   \item init static data with zero to store them in \binarycode{.bss} segment
    \item mark constant data as \sourcecode{static const} to put it into read-only sections
   \end{itemize}
   \item minimize dynamic relocations
@@ -98,8 +98,10 @@
  \frametitle{C and C++ - Other Tips}
  \begin{itemize}
   \item initialize class members in constructor, don't assign
-  \item use references or pointers for passing objectiosn to functions
+  \item use references or pointers for passing objects to functions
   \item use references or pointers for returning class members
+  \item construct objects in return statement to enable return-value optimization
+  \item overload functions for different argument types
  \end{itemize}
  \begin{itemize}
   \item \book{S. Meyers}{Effective C++, 3rd ed.}{Addison-Wesley 2005}
@@ -126,7 +128,7 @@
 \begin{frame}
  \frametitle{CPU - Branching}
  \begin{itemize}
-  \item hardware tries to predice target of a conditional jump instruction
+  \item processor tries to predice target of a conditional jump instruction
    \begin{itemize}
     \item statically (e.g., always expect true)
     \item dynamically with branch-prediction buffer
@@ -150,7 +152,7 @@
   \begin{itemize}
    \item no branch prediction necessary
    \item frees slots in the branch-prediction buffer
-   \item often allows use of mutiply pipelines
+   \item often allows use of mutiple pipelines in parallel
   \end{itemize}
   \item disadvantages
   \begin{itemize}
@@ -259,13 +261,13 @@
 \begin{frame}
  \frametitle{Memory - Cache Line Bouncing}
  \begin{itemize}
-  \item CPUs use shared variables for communication with each other
+  \item processors use shared variables for communication with each other
    \begin{itemize}
     \item data exchange
     \item syncronization
    \end{itemize}
-  \item Write operations invalidate cache lines
-  \item Read operations need to fetch cache lines
+  \item write operations invalidate cache lines
+  \item read operations need to fetch cache lines
   \item known as \textit{Cache Line Bouncing}
   \item can be avoided by good concurrency control
   \item \paperurl{U. Drepper}{What Every Programmer Should Know About Memory}{http://www.akkadia.org/drepper/cpumemory.pdf}
@@ -283,7 +285,7 @@
 \begin{frame}
  \frametitle{Concurrency Control - Atomic Ops}
  \begin{itemize}
-  \item Atomic operations modify single values (or multiple values with Transactional Memory)
+  \item atomic operations modify single values
   \item advantages
    \begin{itemize}
     \item good if lock contention is low
@@ -300,7 +302,7 @@
 \begin{frame}
  \frametitle{Concurrency Control - Locking}
  \begin{itemize}
-  \item Can work on arbitrary data
+  \item works on arbitrary data
   \item advantages
    \begin{itemize}
     \item good if lock contention is high
@@ -311,16 +313,16 @@
     \item more initial overhead because of system-call
     \item dead locks possible
    \end{itemize}
-  \item increase lock granulatity if contention is high
+  \item increase lock granularity if contention is high
  \end{itemize}
 \end{frame}
 
 \begin{frame}
  \frametitle{Tools}
  \begin{description}
-  \item[\program{pahole}] layout of data structures in memory
-  \item[\program{perf}] system-wide profiling based on hardware counters
-  \item[\program{oprofile}] alternative to \program{perf}
   \item[\program{readelf}] information about ELF binaries
+  \item[\program{perf}] system-wide profiling for Linux
+  \item[\program{oprofile}] alternative to \program{perf}
+  \item[\program{pahole}] layout of data structures in memory
  \end{description}
 \end{frame}

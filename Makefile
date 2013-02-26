@@ -38,6 +38,7 @@ clean:
 	$(RM) *.out
 	$(RM) *.snm
 	$(RM) *.toc
+	$(RM) *.vrb
 
 %-eps.pdf: %.eps
 	$(EPSTOPDF) $(EPSTOPDFFLAGS) --outfile=$@ $^
