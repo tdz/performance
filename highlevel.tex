@@ -1,1 +1,174 @@
+\begin{frame}
+ \frametitle{JavaScript}
+ \begin{itemize}
+  \item General tips
+  \begin{itemize}
+   \item Don't mix types
+   \item Use simple types as much as possible
+   \begin{itemize}
+    \item Use an integer as an ID instead of a string
+    \item Use short arrays to store short vectors (e.g. x, y, z coordinates)
+   \end{itemize}
+   \item Recompute simple values, don't store them
+   \item Use arrays when possible
+  \end{itemize}
+ \end{itemize}
+\end{frame}
 
+\begin{frame}
+ \frametitle{JavaScript (continued)}
+ \begin{itemize}
+  \item DOM navigation
+   \begin{itemize}
+    \item Use \sourcecode{node.children} not \sourcecode{node.childNodes} to
+          navigate child nodes
+    \item Always iterate at the same level with \sourcecode{nextElementSibling}
+   \end{itemize}
+  \item Object management
+  \begin{itemize}
+   \item Use standard objects over classes and prototypes
+   \item Don't add new properties to an object after initialization
+   \item Don't remove properties with \sourcecode{delete}
+  \end{itemize}
+ \end{itemize}
+\end{frame}
+
+\begin{frame}
+ \frametitle{Garbage collection}
+ \begin{itemize}
+  \item Use small types whenever possible
+  \item Avoid creating too many temporary objects
+  \item Don't hold objects you don't need any more
+  \item Watch out for variables held by closures
+  \item Again, don't add new properties to an object after initialization
+  \item Again, don't remove properties with \sourcecode{delete}
+  \item Unbind all unused listeners
+  \item If you're keeping a cache around or a similar structure listen to
+        \sourcecode{memory-pressure} events and flush it when you receive them
+  \item Be careful when manipulating strings
+  \begin{itemize}
+   \item Avoid useless concatenations / splits
+   \item Avoid concatenating to large strings
+  \end{itemize}
+ \end{itemize}
+\end{frame}
+
+\begin{frame}
+ \frametitle{CSS}
+ \begin{itemize}
+  \item Keep selectors simple
+  \item Complex selectors can be expensive and make your styles hard to
+        understand for people reading the code
+  \item Use ID-, tag- and class-based rules
+  \begin{itemize}
+   \item \sourcecode{\#toppanel \{\ldots{}\}}
+   \item \sourcecode{.squarebutton \{\ldots{}\}}
+   \item \sourcecode{a \{\ldots{}\}}
+  \end{itemize}
+  \item Avoid universal selectors
+  \begin{itemize}
+   \item \sourcecode{[hidden=true] \{\ldots{}\}}
+  \end{itemize}
+  \item In general the less elements a rule can apply to the better
+ \end{itemize}
+\end{frame}
+
+\begin{frame}
+ \frametitle{Layout}
+ \begin{itemize}
+  \item Always specify sizes for elements if possible
+  \item Prefer CSS backgrounds to image tags
+  \item Setting a position / size property will likely trigger a reflow, group
+        those changes to multiple elements to avoid causing more than one
+  \item Reading a position / size property before the page has been reflowed
+        will cause a reflow and it will be a \emph{synchronous} one!
+  \item Use a \sourcecode{DocumentFragment} to append elements to a DOM tree
+  \item Fully initialize a new element before adding it to the DOM tree
+ \end{itemize}
+\end{frame}
+
+\begin{frame}
+ \frametitle{Painting}
+ \begin{itemize}
+  \item Group methods that do or cause repainting
+  \item Avoid animated images (PNG/GIF), are expensive to paint and inflexible
+  \item Make good use of \sourcecode{<canvas>} elements
+  \begin{itemize}
+   \item For animation that is not possible via CSS properties
+   \item For drawing small animated UI elements (e.g. status icons)
+   \item For animated images
+   \item They are \sourcecode{requestAnimationFrame()}-friendly
+   \item Use native types in the drawing code (arrays, etc...)
+   \item Do not use them for things that can be done using conventional methods,
+         native Gecko is faster at drawing than JavaScript code
+  \end{itemize}
+ \end{itemize}
+\end{frame}
+
+\begin{frame}
+ \frametitle{Startup performance}
+ \begin{itemize}
+  \item Don't include scripts or stylesheets that are not immediately needed, load them when needed
+  \item Use the "defer" or "async" attribute on script tags needed at startup
+  \item Create DOM elements only when they are actually needed
+   \begin{itemize}
+    \item An element can be hidden in a comment and extracted from it when needed
+    \item \sourcecode{<div id="foo"><!-- <div> ... --></div>}
+    \item \sourcecode{foo.innerHTML = foo.firstChild.nodeValue}
+   \end{itemize}
+  \item Optimize your assets
+  \item Don't wait for storage / remote resources, load them while the application is already running
+ \end{itemize}
+\end{frame}
+
+\begin{frame}
+ \frametitle{Application responsiveness}
+ \begin{itemize}
+  \item Can be hampered by a number of issues
+  \begin{itemize}
+   \item Blocking on slow operations (I/O, network)
+   \item Long-running CPU-intensive operations
+   \item Excessive updates / refreshes
+   \item Platform limitations
+  \end{itemize}
+  \item Use asynchronous APIs as much as possible
+   \begin{itemize}
+    \item For storage I/O
+     \begin{itemize}
+      \item AsyncStorage is what you want
+      \item Keep away from LocalStorage (unless it's used in a worker)
+      \item Using IndexedDB directly is fine but keep everything asynchronous
+     \end{itemize}
+    \item For network resources
+    \begin{itemize}
+     \item You don't want your application to wait for a timeout to expire
+    \end{itemize}
+    \item For local resources too opt for asynchronous interfaces when both async and sync are available
+   \end{itemize}
+ \end{itemize}
+\end{frame}
+
+\begin{frame}
+ \frametitle{Application responsiveness (CPU usage)}
+ \begin{itemize}
+ \item Limiting CPU usage is always a win
+ \begin{itemize}
+  \item Lets other applications run smoothly
+  \item Makes the CPU available for background tasks
+  \item Lengthens battery life!
+ \end{itemize}
+  \item Use web worker threads to offload CPU-intensive or long-running tasks
+  \begin{itemize}
+   \item \url{https://developer.mozilla.org/en-US/docs/DOM/Using_web_workers}
+   \item Keeps the main thread free and thus the application responsive
+   \item Limitation: a worker cannot manipulate the DOM!
+  \end{itemize}
+  \item Watch out for event handler spam
+   \begin{itemize}
+    \item Data transfer progress updates
+    \item Rapidly firing timers
+    \item Throttle or group events when possible
+   \end{itemize}
+  \item Always use requestAnimationFrame() for animations
+ \end{itemize}
+\end{frame}
