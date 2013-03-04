@@ -1,0 +1,167 @@
+\begin{frame}
+ \frametitle{Profiling}
+ \begin{itemize}
+  \item Why profiling?
+   \begin{itemize}
+    \item To identify hot-spots, regressions and unpredictable issues
+    \item To get an accurate idea of the overall performance profile of an
+          application and not just a part of it
+    \item To make informed decisions on what to optimize
+   \end{itemize}
+  \item \emph{Never optimize without profiling first!}
+ \end{itemize}
+\end{frame}
+
+\begin{frame}
+ \frametitle{Profiling with the built-in profiler}
+ \begin{itemize}
+  \item SPS built-in profiler
+   \begin{itemize}
+    \item The best way to profile anything within Firefox and FxOS
+    \item \url{https://developer.mozilla.org/en-US/docs/Performance/Profiling_with_the_Built-in_Profiler}
+   \end{itemize}
+  \item Advantages
+  \begin{itemize}
+   \item Captures both native and JavaScript code
+   \item Has complementary tools for spotting events (GC, layout, etc)
+   \item Profile information is easy to read and share
+  \end{itemize}
+  \item Disadvantages
+  \begin{itemize}
+   \item Limited to the main thread
+   \item Limited native code analysis in FxOS
+   \item Granularity can be too coarse and samples can be skewed
+   \item Does not capture system effects
+   \item Requires a special build
+  \end{itemize}
+ \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+ \frametitle{Profiling on your device}
+ \begin{itemize}
+  \item Configuring your build
+   \begin{itemize}
+    \item Start with a regular B2G build
+    \item Make sure \sourcecode{elfhack} is disabled in \sourcecode{.mozconfig}
+    \item \sourcecode{ac\_add\_options --disable-elf-hack}
+   \end{itemize}
+  \item Rebuild and flash your device
+  \item Start the profiler with \sourcecode{./profile.sh start}
+  \item Check for the running applications with \sourcecode{./profile.sh ps}
+   \begin{Verbatim}
+  PID Name
+----- ----------------
+ 4989 b2g              profiler running
+ 5037 Usage            profiler running
+ 5038 Homescreen       profiler running
+ 5203 (Preallocated a  profiler running
+   \end{Verbatim}
+ \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+ \frametitle{Capturing one or more profiles}
+ \begin{itemize}
+  \item You can capture the profile of an application by specifiying it's name or PID
+   \begin{itemize}
+    \item \sourcecode{./profile capture Homescreen}
+    \item \sourcecode{./profile capture 5038}
+   \end{itemize}
+  \item If all goes well you'll end up with a .sym file:
+   \begin{Verbatim}
+Signalling PID: 5038 Homescreen ...
+Stabilizing 5038 Homescreen ...
+Pulling /data/local/tmp/profile_2_5038.txt into profile_5038_Homescreen.txt
+Adding symbols to profile_5038_Homescreen.txt and creating profile_5038_Homescreen.sym ...
+Removing old profile files (from device) ... done
+   \end{Verbatim}
+  \item You can also capture profiles for all processes at the same time by not specifying any parameter
+  \begin{itemize}
+   \item \sourcecode{./profile capture}
+  \end{itemize}
+ \end{itemize}
+\end{frame}
+
+\begin{frame}
+ \frametitle{Analysing your profile}
+ \begin{itemize}
+  \item The profile will contain up to 100s of the process' activity
+  \item Default sample time is 10ms, it can be lowered to 1ms at most
+  \item When you have many processes open capturing a profile might kill some
+        processes due to OOM so tread carefully
+  \item To analyze your profile you will need to upload it to our web-based service Cleopatra
+  \begin{itemize}
+   \item \url{http://people.mozilla.com/~bgirard/cleopatra/}
+   \item It can also be run locally but then you'll lose the ability to share profiles
+   \item The code is available here \url{https://github.com/mozilla/cleopatra}
+  \end{itemize}
+ \end{itemize}
+\end{frame}
+
+\begin{frame}
+ \begin{center}
+  \Huge{Cleopatra demo}
+ \end{center}
+\end{frame}
+
+\begin{frame}
+ \frametitle{Studying a profile}
+ \begin{itemize}
+  \item Reading call-stacks
+  \begin{itemize}
+   \item JavaScript code can be easily analyzed and referenced
+   \item Native code currently uses markers, it's important to spot major ones
+   \begin{itemize}
+    \item \sourcecode{nsAppShell::ProcessNextNativeEvent::Wait}
+    \item \sourcecode{JS::EvaluateString} and \sourcecode{js::RunScript}
+    \item \sourcecode{Timer::Fire}
+    \item \sourcecode{nsRefreshDriver::Notify}
+    \item \sourcecode{Paint::PresShell::Paint}
+    \item \sourcecode{Layout::Flush}
+    \item \sourcecode{GC::GarbageCollectNow}
+   \end{itemize}
+  \end{itemize}
+  \item Cleopatra provides hints
+   \begin{itemize}
+    \item GC markers
+    \item Layout markers
+    \item I/O markers
+   \end{itemize}
+ \end{itemize}
+\end{frame}
+
+\begin{frame}
+ \frametitle{Studying a profile \(continued\)}
+ \begin{itemize}
+  \item Filtering
+  \begin{itemize}
+   \item JavaScript-only filtering
+   \item Narrow down to a single function/method
+  \end{itemize}
+  \item Inverting call stacks
+  \item Zoom as needed to get a better idea of what's going on
+  \item Upload your profile and add a link to your ticket for easy sharing
+ \end{itemize}
+\end{frame}
+
+\begin{frame}
+ \frametitle{Limits and pitfalls}
+ \begin{itemize}
+  \item Only the main thread is currently sampled, if you have worker threads
+        significant time might be spent on them
+  \item A lot of activities are delegated to the main B2G process, capturing
+        both your app and the b2g process is often a good idea
+  \item The profile shows real-time, not CPU time, if the phone is loaded it
+        will appear as the app is slower
+  \item The profile does not show system activity
+  \begin{itemize}
+   \item Use \sourcecode{top} to spot high system activity
+   \item Watch out for I/O activity, check for \sourcecode{write} or
+         \sourcecode{read} calls in your profile, use \sourcecode{top} to
+         estimate the wait time
+   \item Use \sourcecode{perf} if all else fails
+  \end{itemize}
+  \item IPC will not show up in the profile so be careful
+ \end{itemize}
+\end{frame}
